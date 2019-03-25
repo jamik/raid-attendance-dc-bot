@@ -58,6 +58,18 @@ function handleSubscribe(msg) {
     msg.reply(help())
     return;
   }
+  if (res[1] < 0 || res[1] >= raidList.length) {
+    console.log("handleSubscribe(): idx=" + res[1] + " out of bounds.");
+    msg.reply("Identifier " + res[1] + " out of bounds");
+    return
+  }
+
+  var raid = raidList[res[1]];
+  if (raid.contains(msg.author.username)){
+    msg.reply("You are already subscribed for the raid");
+    return
+  }
+
   raider = new Raider(msg.author.username, res[2]);
   var raid = raidList[res[1]];
   raid.addMember(raider);
@@ -68,12 +80,19 @@ function handleSubscribe(msg) {
 function handleUnsubscribe(msg){
   var pattern = /!unsub (\d+)/g;
   var res = pattern.exec(msg.content);
-  
   if (!res) {
-    console.log("handleSubscribe(): failed, msg= " + msg.content);
+    console.log("handleUnsubscribe(): failed, msg= " + msg.content);
     msg.reply(help())
     return;
   }
+  // check list bounds
+  if (res[1] < 0 || res[1] >= raidList.length) {
+    console.log("handleUnsubscribe(): idx=" + res[1] + " out of bounds.");
+    msg.reply("Identifier" + res[1] + "out of bounds");
+    return
+  }
+
+  raidList[res[1]].removeMember();
 
   msg.reply('You have been unsubscribed from the raid')
 }
@@ -100,14 +119,14 @@ function handleRemoveRaid(msg){
     msg.reply(help())
     return;
   }
-  if (res[1] >= raidList.length) {
+  if (res[1] < 0 || res[1] >= raidList.length) {
     console.log("handleRemoveRaid(): idx=" + res[1] + " out of bounds.");
-    msg.reply("Identifier" + res[1] + "out of bounds");
+    msg.reply("Identifier " + res[1] + " out of bounds");
     return
   }
-  console.log("Deleting raid [" + res[1] + "] " + raidList[res[1]].name)
+  console.log("Deleting raid [" + res[1] + "] " + raidList[res[1]].name);
   raidList.splice(res[1], 1);
-  msg.reply("Raid removed!")
+  msg.reply("Raid removed!");
 }
 
 
@@ -124,5 +143,14 @@ function handleListRaids(msg){
 function handleShowRaidAttendance(msg){
   pattern = /!show (\d)/g
   res = pattern.exec(msg.content);
+  if (!res){
+    console.log("handleShowRaidAttendance(): failed, msg= " + msg.content);
+    return
+  }
+  if (res[1] < 0 || res[1] >= raidList.length){
+    console.log("handleRemoveRaid(): idx=" + res[1] + " out of bounds.");
+    msg.reply("Identifier " + res[1] + " out of bounds");
+    return;
+  }
   msg.reply(raidList[res[1]].getRaidSetup());
 }

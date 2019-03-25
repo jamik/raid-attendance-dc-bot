@@ -6,13 +6,21 @@ class Raid {
     this.raidersList = [];
   }
 
+  contains(name){
+    for (var i=0;i<this.raidersList.length;i++){
+      if (this.raidersList[i].name == name)
+        return true
+    }
+    return false;
+  }
+
   addMember(member){
     this.raidersList.push(member)
   }
 
   removeMember(name){
     idx = null;
-    for(var i=0;i<raidersList.length;i++){
+    for(var i=0;i<this.raidersList.length;i++){
       if(this.raidersList[i].name == name){
         idx = i;
         break;
@@ -20,7 +28,7 @@ class Raid {
     }
     if (!idx){
       console.log("Raid::removeMember(): Member \"" + name + "\" was not found.");
-      msg.reply("You are not subscribed to the raid " + this.name + "(" + this.date ")");
+      msg.reply("You are not subscribed to the raid " + this.name + "(" + this.date + ")");
       return
     }
     this.raidersList.splice(idx, 1);
@@ -49,7 +57,7 @@ class Raid {
         healers += "\n  " + this.raidersList[i].name;
       else if (this.raidersList[i].role == "m")
         melees += "\n  " + this.raidersList[i].name;
-      else if (raidersList[i].role == "r")
+      else if (this.raidersList[i].role == "r")
         rangeds += "\n  " + this.raidersList[i].name;
     }
 
