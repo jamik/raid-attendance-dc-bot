@@ -1,3 +1,8 @@
+const ROLE_TANK = 'Tank';
+const ROLE_HEALER = 'Healer';
+const ROLE_RANGED = 'Ranged';
+const ROLE_MELEE = 'Melee';
+
 class Raid {
 
   constructor(name, date){
@@ -19,23 +24,25 @@ class Raid {
   }
 
   removeMember(name){
-    idx = null;
+    var idx = null;
     for(var i=0;i<this.raidersList.length;i++){
       if(this.raidersList[i].name == name){
         idx = i;
         break;
       }
     }
-    if (!idx){
+
+    if (idx == null){
       console.log("Raid::removeMember(): Member \"" + name + "\" was not found.");
-      msg.reply("You are not subscribed to the raid " + this.name + "(" + this.date + ")");
-      return
+      return false;
     }
     this.raidersList.splice(idx, 1);
+
+    return true;
   }
 
   toString(){
-    return  this.name + ' is scheduled on ' + this.date;
+    return  this.name + ' is scheduled for ' + this.date;
   }
 
   getRaidSetup(){
@@ -51,13 +58,13 @@ class Raid {
 
       console.log(this.raidersList[i].name + " -> " + this.raidersList[i].role);
 
-      if (this.raidersList[i].role == "t")
+      if (this.raidersList[i].role == ROLE_TANK)
         tanks += "\n  " + this.raidersList[i].name;
-      else if (this.raidersList[i].role == "h")
+      else if (this.raidersList[i].role == ROLE_HEALER)
         healers += "\n  " + this.raidersList[i].name;
-      else if (this.raidersList[i].role == "m")
+      else if (this.raidersList[i].role == ROLE_MELEE)
         melees += "\n  " + this.raidersList[i].name;
-      else if (this.raidersList[i].role == "r")
+      else if (this.raidersList[i].role == ROLE_RANGED)
         rangeds += "\n  " + this.raidersList[i].name;
     }
 
